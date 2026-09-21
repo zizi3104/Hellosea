@@ -1,0 +1,13 @@
+await import('./pricing.mjs');
+await import('./team.mjs');
+await import('./gallery.mjs');
+import { cp, mkdir, readFile, rm, access } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const root = fileURLToPath(new URL('../', import.meta.url));
+await access(`${root}public/assets/mascot-b.svg`);
+const html = await readFile(`${root}public/index.html`,'utf8');
+for (const match of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) await access(`${root}public${match[1]}`);
+await rm(`${root}dist`,{recursive:true,force:true});
+await mkdir(`${root}dist`,{recursive:true});
+await cp(`${root}public`,`${root}dist`,{recursive:true});
+console.log('HELLO SEA frontend built. Vercel deploys api/ as server functions.');

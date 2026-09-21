@@ -1,0 +1,72 @@
+[
+  {
+    "id": "group",
+    "price": 500000,
+    "title": {
+      "en": "Group lesson",
+      "ko": "그룹 수업",
+      "ja": "グループレッスン"
+    },
+    "detail": {
+      "en": "2 hours · per person",
+      "ko": "2시간 · 1인 기준",
+      "ja": "2時間・1名あたり"
+    }
+  },
+  {
+    "id": "private",
+    "price": 700000,
+    "title": {
+      "en": "Private lesson",
+      "ko": "개인 수업",
+      "ja": "プライベートレッスン"
+    },
+    "detail": {
+      "en": "2 hours · per person",
+      "ko": "2시간 · 1인 기준",
+      "ja": "2時間・1名あたり"
+    }
+  },
+  {
+    "id": "guiding",
+    "price": 400000,
+    "title": {
+      "en": "Surf guiding",
+      "ko": "서핑 가이딩",
+      "ja": "サーフガイド"
+    },
+    "detail": {
+      "en": "2–2.5 hours · per person",
+      "ko": "2~2.5시간 · 1인 기준",
+      "ja": "2〜2.5時間・1名あたり"
+    }
+  },
+  {
+    "id": "three",
+    "price": 1350000,
+    "title": {
+      "en": "3-session package",
+      "ko": "3회 수업 패키지",
+      "ja": "3回レッスンパッケージ"
+    },
+    "detail": {
+      "en": "3 sessions · per person",
+      "ko": "3회 전체 · 1인 기준",
+      "ja": "3回分・1名あたり"
+    }
+  },
+  {
+    "id": "five",
+    "price": 2000000,
+    "title": {
+      "en": "5-session package",
+      "ko": "5회 수업 패키지",
+      "ja": "5回レッスンパッケージ"
+    },
+    "detail": {
+      "en": "5 sessions · per person",
+      "ko": "5회 전체 · 1인 기준",
+      "ja": "5回分・1名あたり"
+    }
+  }
+]

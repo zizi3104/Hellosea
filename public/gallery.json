@@ -1,0 +1,92 @@
+[
+  {
+    "id": "gerupuk",
+    "src": "/assets/photos/gerupuk-beach.jpg",
+    "category": "scenery",
+    "width": 3264,
+    "height": 1836,
+    "title": {
+      "en": "Hello, Gerupuk Bay",
+      "ko": "안녕, 그루뿍 바다",
+      "ja": "こんにちは、グルプックの海"
+    },
+    "location": {
+      "en": "Gerupuk, Lombok · 2017",
+      "ko": "그루뿍, 롬복 · 2017년",
+      "ja": "グルプック、ロンボク · 2017年"
+    },
+    "alt": {
+      "en": "Boats and the shoreline at Gerupuk Beach, Lombok",
+      "ko": "롬복 그루뿍 해변의 배와 해안 풍경",
+      "ja": "ロンボク島グルプックの浜辺とボート"
+    },
+    "author": "伊賀上野ニンニン",
+    "originalTitle": "Gerupuk Beach.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Gerupuk_Beach.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "date": "2017-03-28",
+    "featured": true,
+    "changes": "Original image file unchanged; thumbnails may be framed by the page layout. Displayed crops of CC BY-SA images remain under CC BY-SA 4.0."
+  },
+  {
+    "id": "mawi",
+    "src": "/assets/photos/mawi-surf.jpg",
+    "category": "surf",
+    "width": 3504,
+    "height": 2336,
+    "title": {
+      "en": "A moment on the wave",
+      "ko": "파도 위의 순간",
+      "ja": "波に乗る瞬間"
+    },
+    "location": {
+      "en": "Mawi, Lombok · 2008",
+      "ko": "마위, 롬복 · 2008년",
+      "ja": "マウィ、ロンボク · 2008年"
+    },
+    "alt": {
+      "en": "A surfer turning on a breaking wave at Mawi, Lombok",
+      "ko": "롬복 마위에서 파도를 타며 턴하는 서퍼",
+      "ja": "ロンボク島マウィの波でターンするサーファー"
+    },
+    "author": "David Hunt",
+    "originalTitle": "Dave B @ Mawi",
+    "source": "https://commons.wikimedia.org/wiki/File:Dave_B_@_Mawi_(2706207006).jpg",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "date": "2008-05-25",
+    "featured": false,
+    "changes": "Original image file unchanged; thumbnails may be framed by the page layout. Displayed crops of CC BY-SA images remain under CC BY-SA 4.0."
+  },
+  {
+    "id": "tanjung-aan",
+    "src": "/assets/photos/tanjung-aan.jpg",
+    "category": "scenery",
+    "width": 3000,
+    "height": 2000,
+    "title": {
+      "en": "Room to slow down",
+      "ko": "천천히 쉬어가는 바다",
+      "ja": "ゆっくり過ごす海辺"
+    },
+    "location": {
+      "en": "Tanjung Aan, Lombok · 2017",
+      "ko": "탄중안, 롬복 · 2017년",
+      "ja": "タンジュン・アン、ロンボク · 2017年"
+    },
+    "alt": {
+      "en": "White sand and turquoise water at Tanjung Aan, Lombok",
+      "ko": "롬복 탄중안 해변의 흰 모래와 푸른 바다",
+      "ja": "ロンボク島タンジュン・アンの白い砂浜と青い海"
+    },
+    "author": "Suryanata budi / PAGESPHOTOGRAPH",
+    "originalTitle": "PANTAI TANJUNG AAN.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:PANTAI_TANJUNG_AAN.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "date": "2017-06-02",
+    "featured": false,
+    "changes": "Original image file unchanged; thumbnails may be framed by the page layout. Displayed crops of CC BY-SA images remain under CC BY-SA 4.0."
+  }
+]

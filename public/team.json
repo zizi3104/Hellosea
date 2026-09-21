@@ -1,0 +1,28 @@
+{
+  "intro": {
+    "en": "A surf school led by Asim and Yudha. Come for the waves, learn at your own pace, and feel at home in Gerupuk.",
+    "ko": "Asim과 Yudha가 이끌어가는 서프스쿨. 그루뿍의 바다에서 나만의 속도로 배우고, 편안하게 서핑을 즐겨보세요.",
+    "ja": "AsimとYudhaが率いるサーフスクール。グルプックの海で、自分のペースで学び、心地よいサーフィンの時間を。"
+  },
+  "people": [
+    {
+      "name": "Asim",
+      "photo": "",
+      "bio": {
+        "en": "Meet Asim, one of the people leading HELLO SEA. We’ll share his story and approach to surfing here soon.",
+        "ko": "HELLO SEA를 함께 이끌어가는 Asim입니다. 서핑을 대하는 마음과 이야기를 이곳에 소개할 예정이에요.",
+        "ja": "HELLO SEAを共に率いるAsim。サーフィンへの思いやストーリーを、これからここでご紹介します。"
+      }
+    },
+    {
+      "name": "Yudha",
+      "photo": "",
+      "bio": {
+        "en": "Meet Yudha, one of the people leading HELLO SEA. We’ll share his story and approach to surfing here soon.",
+        "ko": "HELLO SEA를 함께 이끌어가는 Yudha입니다. 서핑을 대하는 마음과 이야기를 이곳에 소개할 예정이에요.",
+        "ja": "HELLO SEAを共に率いるYudha。サーフィンへの思いやストーリーを、これからここでご紹介します。"
+      }
+    }
+  ],
+  "sample": true
+}
