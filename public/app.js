@@ -55,7 +55,6 @@ function renderState() {
   submit.disabled=!ready||sending; submit.textContent=t(sending?'sending':'send');
   status.textContent=errorKey?t(errorKey):'';
   document.querySelector('#reply-email').textContent=replyEmail;
-  document.querySelector('#whatsapp').href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('waMessage'))}`;
 }
 function showError(key,field) {
   form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
@@ -157,11 +156,9 @@ window.addEventListener('resize',syncAyoNavigation);
 function inquiryWhatsAppText(){const e=form.elements;return buildWhatsAppInquiry({name:e.name.value.trim(),email:e.email.value.trim(),date:date.value,people:e.people.value,plan:e.planKey.selectedOptions[0]?.textContent,total:e.planKey.value?document.querySelector('#pricing-total').textContent:'',level:e.level.selectedOptions[0]?.textContent,phone:e.phone.value.trim(),message:e.message.value.trim()},language);}
 function openInquiryWhatsApp(text){
  const links=buildWhatsAppLinks(whatsappNumber,text);
- const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
- if(isMobile){window.location.href=links.universal;return;}
- // Desktop browsers otherwise show WhatsApp's intermediary landing page.
- // Use the registered desktop-app protocol so an installed WhatsApp opens directly.
- window.location.href=links.app;
+ // Use WhatsApp's official universal link so the complete encoded message
+ // is preserved when handing off to WhatsApp on desktop or mobile.
+ window.location.href=links.universal;
 }
 document.querySelector('#form-whatsapp-send').addEventListener('click',()=>{const error=validateFields();if(error){showError(...error);return;}form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));errorKey='waFormOpened';renderState();openInquiryWhatsApp(inquiryWhatsAppText());});
 document.querySelector('#success-whatsapp').addEventListener('click',()=>{if(lastInquiryText)openInquiryWhatsApp(lastInquiryText);});
