@@ -1,3 +1,4 @@
+import {serverHeaders} from '../lib/content.js';
 import {getPrices} from '../lib/management.js';
 import { createHmac } from 'node:crypto';
 import { configured, allowedOrigins } from '../lib/config.js';
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
   try {
     const base = process.env.SUPABASE_URL.replace(/\/$/,'');
     const response = await fetch(`${base}/rest/v1/rpc/submit_surf_inquiry`, {
-      method:'POST', headers:{ 'Content-Type':'application/json', apikey:process.env.SUPABASE_SECRET_KEY },
+      method:'POST', headers:{ 'Content-Type':'application/json', ...serverHeaders() },
       body:JSON.stringify({ payload:checked.value, client_hash:rateKey }), signal:AbortSignal.timeout(10000)
     });
     if (!response.ok) return res.status(503).json({ error:'We couldn’t save your inquiry right now. Please try again.' });

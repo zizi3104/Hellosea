@@ -27,3 +27,16 @@ result=[{content:prices.map(p=>({...p,price:p.price+1000}))}];assert.equal((awai
 result=[{content:[]}];await assert.rejects(getPrices);
 }finally{process.env=env;globalThis.fetch=oldFetch;}
 });
+
+test('Owner email must be server-approved and verified; metadata cannot grant access', async()=>{
+ const {adminAllowed}=await import('../lib/auth.js');const old=process.env.ADMIN_EMAILS;
+ try{process.env.ADMIN_EMAILS='hellosea@hellosealombok.com';
+ assert.equal(adminAllowed({id:'x',email:'hellosea@hellosealombok.com'}),false);
+ assert.equal(adminAllowed({id:'x',email:'guest@example.com',email_confirmed_at:'yes',user_metadata:{email:'hellosea@hellosealombok.com',admin:true}}),false);
+ assert.equal(adminAllowed({id:'x',email:'hellosea@hellosealombok.com',email_confirmed_at:'yes'}),true);
+ }finally{if(old===undefined)delete process.env.ADMIN_EMAILS;else process.env.ADMIN_EMAILS=old;}
+});
+test('Legacy server key uses bearer auth; modern secret key does not',async()=>{
+ const {serverHeaders}=await import('../lib/content.js');const old=process.env.SUPABASE_SECRET_KEY;
+ try{process.env.SUPABASE_SECRET_KEY='eyJtest';assert.equal(serverHeaders().Authorization,'Bearer eyJtest');process.env.SUPABASE_SECRET_KEY='sb_secret_test';assert.equal(serverHeaders().Authorization,undefined);}finally{if(old===undefined)delete process.env.SUPABASE_SECRET_KEY;else process.env.SUPABASE_SECRET_KEY=old;}
+});
