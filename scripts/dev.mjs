@@ -7,6 +7,7 @@ import inquiries from '../api/inquiries.js';
 import config from '../api/config.js';
 import auth from '../api/auth.js';
 import content from '../api/content.js';
+import { pageForPath, renderCustomerPage } from './pages.mjs';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json'};
 const server = createServer(async(req,res) => {
@@ -26,7 +27,9 @@ const server = createServer(async(req,res) => {
   }
   if(!['GET','HEAD'].includes(req.method)) { res.writeHead(405); return res.end(); }
   try {
-    const path=resolve(root,`.${decodeURIComponent(pathname==='/'?'/index.html':pathname==='/admin'||pathname==='/admin/'?'/admin.html':pathname)}`);
+    const customerPage=pageForPath(pathname);
+    if(customerPage){const template=await readFile(resolve(root,'index.html'),'utf8');const data=renderCustomerPage(template,customerPage);res.writeHead(200,{'Content-Type':types['.html']});return res.end(req.method==='HEAD'?undefined:data);}
+    const path=resolve(root,`.${decodeURIComponent(pathname==='/admin'||pathname==='/admin/'?'/admin.html':pathname)}`);
     if(!path.startsWith(root)) { res.writeHead(403); return res.end(); }
     const data=await readFile(path); res.writeHead(200,{'Content-Type':types[extname(path)]||'application/octet-stream'}); res.end(req.method==='HEAD'?undefined:data);
   } catch { res.writeHead(404); res.end('Not found'); }
