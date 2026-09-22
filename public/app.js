@@ -55,7 +55,7 @@ function renderState() {
   submit.disabled=!ready||sending; submit.textContent=t(sending?'sending':'send');
   status.textContent=errorKey?t(errorKey):'';
   document.querySelector('#reply-email').textContent=replyEmail;
-  document.querySelectorAll('#whatsapp, [data-whatsapp]').forEach(el=>{el.href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('waMessage'))}`;});
+  document.querySelector('#whatsapp').href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('waMessage'))}`;
 }
 function showError(key,field) {
   form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
