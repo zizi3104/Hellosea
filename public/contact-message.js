@@ -4,3 +4,13 @@ function buildWhatsAppInquiry(fields,locale='en') {
  const keys=['name','email','date','people','plan','total','level','phone','message'];
  return [l[0],'',...keys.map((k,i)=>`${l[i+1]}: ${String(fields[k]||l[10]).trim()}`),'',l[11]].join('\n');
 }
+
+function buildWhatsAppLinks(number,text) {
+ const phone=String(number||'').replace(/\D/g,'');
+ const message=encodeURIComponent(String(text||''));
+ return {
+  app:`whatsapp://send?phone=${phone}&text=${message}`,
+  universal:`https://wa.me/${phone}?text=${message}`,
+  web:`https://web.whatsapp.com/send?phone=${phone}&text=${message}`
+ };
+}
