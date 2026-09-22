@@ -19,7 +19,7 @@ function uuid() {
   return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
 }
 let requestId=uuid(), payloadSignature='', ready=false, sending=false, replyEmail='';
-let availabilityKey='checking', errorKey='', whatsappNumber='6287861136585',contactEmail='';
+let availabilityKey='checking', errorKey='', whatsappNumber='6287861136585',contactEmail='hellosea@hellosealombok.com';
 const previewMode = document.documentElement.dataset.preview === 'true';
 function dateValue(parts) {
   if (parts.every(v => !v)) return {value:''};
