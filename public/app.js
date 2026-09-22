@@ -69,6 +69,7 @@ function validateFields() {
   const checkedDate=dateValue(dateParts.map(e=>e.value));
   if (checkedDate.error) return [checkedDate.error,dateParts.find(e=>!e.value)||dateParts[0]];
   date.value=checkedDate.value;
+  if (el.preferredTime.value&&!/^(?:0[5-9]|1[0-6]):00$/.test(el.preferredTime.value)) return ['timeError',el.preferredTime];
   if (!Number.isInteger(Number(el.people.value))||Number(el.people.value)<1||Number(el.people.value)>8) return ['peopleError',el.people];
   if (!['first-time','beginner','improving','not-sure'].includes(el.level.value)) return ['levelError',el.level];
   const phone=el.phone.value.trim();
@@ -153,7 +154,7 @@ window.addEventListener('scroll',()=>{if(ayoScrollQueued)return;ayoScrollQueued=
 document.addEventListener('languagechange',()=>requestAnimationFrame(syncAyoNavigation));
 window.addEventListener('resize',syncAyoNavigation);
 
-function inquiryWhatsAppText(){const e=form.elements;return buildWhatsAppInquiry({name:e.name.value.trim(),email:e.email.value.trim(),date:date.value,people:e.people.value,plan:e.planKey.selectedOptions[0]?.textContent,total:e.planKey.value?document.querySelector('#pricing-total').textContent:'',level:e.level.selectedOptions[0]?.textContent,phone:e.phone.value.trim(),message:e.message.value.trim()},language);}
+function inquiryWhatsAppText(){const e=form.elements;return buildWhatsAppInquiry({name:e.name.value.trim(),email:e.email.value.trim(),date:date.value,time:e.preferredTime.value,people:e.people.value,plan:e.planKey.selectedOptions[0]?.textContent,total:e.planKey.value?document.querySelector('#pricing-total').textContent:'',level:e.level.selectedOptions[0]?.textContent,phone:e.phone.value.trim(),message:e.message.value.trim()},language);}
 function openInquiryWhatsApp(text){
  const links=buildWhatsAppLinks(whatsappNumber,text);
  // Use WhatsApp's official universal link so the complete encoded message
