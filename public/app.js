@@ -1,3 +1,7 @@
+const currentPage=document.body.dataset.page||'home';
+document.querySelectorAll('[data-page-link]').forEach(link=>{if(link.dataset.pageLink===currentPage)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
+const legacyRoute={story:'/our-story',goods:'/our-story',ayosurf:'/ayo-surf',surf:'/ayo-surf#surf',team:'/ayo-surf#team',pricing:'/ayo-surf#pricing',gallery:'/photos',faq:'/q-and-a',inquire:'/booking-inquiry'}[location.hash.slice(1)];
+if(currentPage==='home'&&legacyRoute)location.replace(legacyRoute);
 const form = document.querySelector('#inquiry-form');
 const status = document.querySelector('#form-status');
 const availability = document.querySelector('#availability');
@@ -81,7 +85,10 @@ function validateFields() {
 dateParts.forEach(el=>el.addEventListener('change',renderDateOptions));
 document.addEventListener('languagechange',()=>{renderDateOptions();renderState();});
 renderDateOptions();renderState();
+const requestedLevel=new URLSearchParams(location.search).get('level');
+if(['first-time','beginner','improving','not-sure'].includes(requestedLevel))form.elements.level.value=requestedLevel;
 document.querySelectorAll('[data-level]').forEach(button=>button.addEventListener('click',()=>{
+ if(currentPage!=='booking'){location.href=`/booking-inquiry?level=${encodeURIComponent(button.dataset.level)}`;return;}
  form.elements.level.value=button.dataset.level;
  document.querySelector('#inquire').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
  form.elements.name.focus({preventScroll:true});
