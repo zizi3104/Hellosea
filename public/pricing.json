@@ -1,7 +1,7 @@
 [
   {
     "id": "group",
-    "price": 500000,
+    "price": 400000,
     "title": {
       "en": "Group lesson",
       "ko": "그룹 수업",
@@ -15,7 +15,7 @@
   },
   {
     "id": "private",
-    "price": 700000,
+    "price": 600000,
     "title": {
       "en": "Private lesson",
       "ko": "개인 수업",
@@ -29,7 +29,7 @@
   },
   {
     "id": "guiding",
-    "price": 400000,
+    "price": 300000,
     "title": {
       "en": "Surf guiding",
       "ko": "서핑 가이딩",
@@ -43,7 +43,7 @@
   },
   {
     "id": "three",
-    "price": 1350000,
+    "price": 1080000,
     "title": {
       "en": "3-session package",
       "ko": "3회 수업 패키지",
@@ -57,7 +57,7 @@
   },
   {
     "id": "five",
-    "price": 2000000,
+    "price": 1600000,
     "title": {
       "en": "5-session package",
       "ko": "5회 수업 패키지",
