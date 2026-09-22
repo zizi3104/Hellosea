@@ -15,5 +15,5 @@ test('Gallery metadata has existing assets, all locales and reusable licence pro
   assert.ok(html.includes(p.source.replaceAll('&','&amp;')));
  }
  assert.ok(photos.some(p=>p.category==='surf'));assert.ok(photos.some(p=>p.category==='scenery'));
- assert.ok(html.includes('id="photo-dialog"'));assert.ok(html.includes('href="#gallery"'));
+ assert.ok(html.includes('id="photo-dialog"'));assert.ok(html.includes('href="/photos"'));
 });
