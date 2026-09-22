@@ -18,6 +18,7 @@ function uuid() {
   const h=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
   return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
 }
+let lastInquiryText='';
 let requestId=uuid(), payloadSignature='', ready=false, sending=false, replyEmail='';
 let availabilityKey='checking', errorKey='', whatsappNumber='6287861136585',contactEmail='hellosea@hellosealombok.com';
 const previewMode = document.documentElement.dataset.preview === 'true';
@@ -114,7 +115,7 @@ form.addEventListener('submit',async event=>{
   const response=await fetch('/api/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields),signal:AbortSignal.timeout(14000)});
   if(!response.ok)throw Object.assign(new Error(),{status:response.status});
   const result=await response.json();if(result.ok!==true)throw new Error();
-  replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();
+  lastInquiryText=inquiryWhatsAppText();replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();
  }catch(error){showError(error.status===429?'limited':error.status===400?'checkDetails':'sendError',null);}
  finally{sending=false;renderState();}
 });
@@ -152,3 +153,8 @@ let ayoScrollQueued=false;
 window.addEventListener('scroll',()=>{if(ayoScrollQueued)return;ayoScrollQueued=true;requestAnimationFrame(()=>{syncAyoNavigation();ayoScrollQueued=false;});},{passive:true});
 document.addEventListener('languagechange',()=>requestAnimationFrame(syncAyoNavigation));
 window.addEventListener('resize',syncAyoNavigation);
+
+function inquiryWhatsAppText(){const e=form.elements;return buildWhatsAppInquiry({name:e.name.value.trim(),email:e.email.value.trim(),date:date.value,people:e.people.value,plan:e.planKey.selectedOptions[0]?.textContent,total:e.planKey.value?document.querySelector('#pricing-total').textContent:'',level:e.level.selectedOptions[0]?.textContent,phone:e.phone.value.trim(),message:e.message.value.trim()},language);}
+function openInquiryWhatsApp(text){window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer');}
+document.querySelector('#form-whatsapp-send').addEventListener('click',()=>{const error=validateFields();if(error){showError(...error);return;}form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));errorKey='waFormOpened';renderState();openInquiryWhatsApp(inquiryWhatsAppText());});
+document.querySelector('#success-whatsapp').addEventListener('click',()=>{if(lastInquiryText)openInquiryWhatsApp(lastInquiryText);});
