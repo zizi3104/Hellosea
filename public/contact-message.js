@@ -14,3 +14,15 @@ function buildWhatsAppLinks(number,text) {
   web:`https://web.whatsapp.com/send?phone=${phone}&text=${message}`
  };
 }
+
+// Keep the save confirmation and WhatsApp handoff as one testable transaction.
+// The message is built and handed off only after the server confirms the save.
+async function completeInquirySave(request,buildMessage,onAccepted) {
+ const response=await request();
+ if(!response?.ok)throw Object.assign(new Error('inquiry_save_failed'),{status:response?.status});
+ const result=await response.json();
+ if(result?.ok!==true)throw new Error('inquiry_save_not_confirmed');
+ const text=buildMessage();
+ await onAccepted(text);
+ return text;
+}

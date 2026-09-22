@@ -112,10 +112,11 @@ form.addEventListener('submit',async event=>{
  const signature=JSON.stringify(fields);if(payloadSignature&&signature!==payloadSignature)requestId=uuid();payloadSignature=signature;fields.requestId=requestId;
  sending=true;errorKey='';renderState();
  try {
-  const response=await fetch('/api/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields),signal:AbortSignal.timeout(14000)});
-  if(!response.ok)throw Object.assign(new Error(),{status:response.status});
-  const result=await response.json();if(result.ok!==true)throw new Error();
-  lastInquiryText=inquiryWhatsAppText();replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();openInquiryWhatsApp(lastInquiryText);
+  await completeInquirySave(
+   ()=>fetch('/api/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields),signal:AbortSignal.timeout(14000)}),
+   inquiryWhatsAppText,
+   text=>{lastInquiryText=text;replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();openInquiryWhatsApp(text);}
+  );
  }catch(error){showError(error.status===429?'limited':error.status===400?'checkDetails':'sendError',null);}
  finally{sending=false;renderState();}
 });
