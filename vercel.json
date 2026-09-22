@@ -36,6 +36,14 @@
         }
       ]
     },
+    {"source":"/i18n.js","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/pricing.js","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/styles.css","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/our-story","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/ayo-surf","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/photos","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/q-and-a","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/booking-inquiry","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {
       "source": "/(.*)",
       "headers": [
@@ -59,6 +67,16 @@
     }
   ],
   "rewrites": [
+    {"source":"/our-story","destination":"/our-story/index.html"},
+    {"source":"/our-story/","destination":"/our-story/index.html"},
+    {"source":"/ayo-surf","destination":"/ayo-surf/index.html"},
+    {"source":"/ayo-surf/","destination":"/ayo-surf/index.html"},
+    {"source":"/photos","destination":"/photos/index.html"},
+    {"source":"/photos/","destination":"/photos/index.html"},
+    {"source":"/q-and-a","destination":"/q-and-a/index.html"},
+    {"source":"/q-and-a/","destination":"/q-and-a/index.html"},
+    {"source":"/booking-inquiry","destination":"/booking-inquiry/index.html"},
+    {"source":"/booking-inquiry/","destination":"/booking-inquiry/index.html"},
     {
       "source": "/admin",
       "destination": "/admin.html"
