@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { validateInquiry, lombokDate } from '../lib/validation.js';
 import handler from '../api/inquiries.js';
-const example = () => ({requestId:randomUUID(),name:'Test Surfer',email:'test@example.com',phone:'',preferredDate:'',people:2,level:'first-time',message:'',consent:true,website:''});
+const example = () => ({requestId:randomUUID(),name:'Test Surfer',email:'test@example.com',phone:'',preferredDate:'',preferredTime:'',people:2,level:'first-time',message:'',consent:true,website:''});
 test('Lombok date changes at UTC+8; invalid calendar and past dates are rejected', () => {
   const now=new Date('2026-09-21T17:00:00Z');
   assert.equal(lombokDate(now),'2026-09-22');
@@ -11,9 +11,10 @@ test('Lombok date changes at UTC+8; invalid calendar and past dates are rejected
   assert.ok(validateInquiry({...example(),preferredDate:'2027-02-30'},now).error);
   assert.ok(validateInquiry({...example(),preferredDate:'2026-09-22'},now).value);
 });
-test('Personal details are validated and consent cannot be a string', () => {
-  for(const patch of [{consent:'true'},{people:1.5},{people:99},{email:'bad'},{name:'x'},{level:'admin'},{website:'spam.example'},{message:'x'.repeat(2001)},{phone:'words'}]) assert.ok(validateInquiry({...example(),...patch}).error);
+test('Personal details and preferred time are validated', () => {
+  for(const patch of [{consent:'true'},{people:1.5},{people:99},{email:'bad'},{name:'x'},{level:'admin'},{website:'spam.example'},{message:'x'.repeat(2001)},{phone:'words'},{preferredTime:'04:00'},{preferredTime:'16:30'},{preferredTime:'17:00'}]) assert.ok(validateInquiry({...example(),...patch}).error);
   assert.equal(validateInquiry({...example(),email:' TEST@EXAMPLE.COM '}).value.email,'test@example.com');
+  for(const preferredTime of ['05:00','09:00','12:00','16:00']) assert.match(validateInquiry({...example(),preferredTime,message:'Board preference'},new Date()).value.message,new RegExp(preferredTime));
 });
 function response() { return {statusCode:200,headers:{},setHeader(k,v){this.headers[k]=v},status(code){this.statusCode=code;return this},json(value){this.body=value;return this}}; }
 test('Endpoint rejects public reads, foreign origins, and missing database configuration', async () => {
