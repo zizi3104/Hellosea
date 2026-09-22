@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import manage from '../api/manage.js';
 import inquiries from '../api/inquiries.js';
 import config from '../api/config.js';
 import auth from '../api/auth.js';
@@ -14,8 +15,9 @@ const server = createServer(async(req,res) => {
   res.json = value => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(value)); };
   if(pathname.startsWith('/api/')) {
     const parts=[]; let length=0;
-    for await(const chunk of req) { length+=chunk.length; if(length>(pathname==='/api/content'?2900000:12000)) { res.status(413).json({error:'Your inquiry is too long.'}); return; } parts.push(chunk); }
+    for await(const chunk of req) { length+=chunk.length; if(length>(['/api/content','/api/manage'].includes(pathname)?2900000:12000)) { res.status(413).json({error:'Your inquiry is too long.'}); return; } parts.push(chunk); }
     req.body=Buffer.concat(parts).toString() || undefined;
+    if(pathname==='/api/manage') return manage(req,res);
     if(pathname==='/api/auth') return auth(req,res);
     if(pathname==='/api/content') return content(req,res);
     if(pathname==='/api/config') return config(req,res);

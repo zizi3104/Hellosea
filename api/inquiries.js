@@ -1,3 +1,4 @@
+import {getPrices} from '../lib/management.js';
 import { createHmac } from 'node:crypto';
 import { configured, allowedOrigins } from '../lib/config.js';
 import { validateInquiry } from '../lib/validation.js';
@@ -10,7 +11,8 @@ export default async function handler(req, res) {
   let body = req.body;
   try { if (typeof body === 'string') body = JSON.parse(body); if (Buffer.byteLength(JSON.stringify(body) || '') > 12000) return res.status(413).json({ error:'Your inquiry is too long.' }); }
   catch { return res.status(400).json({ error:'Please check your inquiry details.' }); }
-  const checked = validateInquiry(body);
+  let prices;try { prices=await getPrices(); if(!prices)throw Error(); } catch {return res.status(503).json({error:'Prices are temporarily unavailable. Please try again.'});}
+  const checked = validateInquiry(body,new Date(),prices);
   if (checked.error) return res.status(400).json({ error:checked.error });
   if (!configured()) return res.status(503).json({ error:'Online inquiries are not open yet. Please try again later.' });
   // Vercel overwrites x-vercel-forwarded-for. Do not trust user-controlled generic forwarded headers.

@@ -19,7 +19,7 @@ function uuid() {
   return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
 }
 let requestId=uuid(), payloadSignature='', ready=false, sending=false, replyEmail='';
-let availabilityKey='checking', errorKey='', whatsappNumber='6287861136585';
+let availabilityKey='checking', errorKey='', whatsappNumber='6287861136585',contactEmail='';
 const previewMode = document.documentElement.dataset.preview === 'true';
 function dateValue(parts) {
   if (parts.every(v => !v)) return {value:''};
@@ -48,6 +48,7 @@ function renderDateOptions() {
   date.value=dateValue(dateParts.map(el=>el.value)).value||'';
 }
 function renderState() {
+  document.querySelectorAll('[data-email-contact]').forEach(el=>{el.hidden=!contactEmail;if(contactEmail)el.href=`mailto:${contactEmail}?subject=${encodeURIComponent(t('emailSubject'))}`;});
   availability.hidden=ready;
   availability.textContent=t(availabilityKey);
   submit.disabled=!ready||sending; submit.textContent=t(sending?'sending':'send');
@@ -94,6 +95,7 @@ async function loadConfig() {
   const response=await fetch('/api/config',{signal:AbortSignal.timeout(8000)});
   if(!response.ok)throw new Error();
   const config=await response.json();ready=config.inquiriesEnabled===true;
+  if(typeof config.contactEmail==='string'&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.contactEmail))contactEmail=config.contactEmail;
   if(config.whatsappNumber&&/^\d{8,15}$/.test(config.whatsappNumber))whatsappNumber=config.whatsappNumber;
   availabilityKey=ready?'checking':'unavailable';
  }catch{availabilityKey='offline';}

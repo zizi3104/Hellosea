@@ -43,7 +43,7 @@
   },
   {
     "id": "three",
-    "price": 1080000,
+    "price": 1200000,
     "title": {
       "en": "3-session package",
       "ko": "3회 수업 패키지",
@@ -57,7 +57,7 @@
   },
   {
     "id": "five",
-    "price": 1600000,
+    "price": 2000000,
     "title": {
       "en": "5-session package",
       "ko": "5회 수업 패키지",

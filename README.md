@@ -112,3 +112,19 @@ Date selection uses explicit Year / Month / Day dropdowns so browser locale cann
 `public/pricing.json`에서 상품과 참고 가격을 관리합니다. 2026-09-21에 https://lomboksurflessons.com/pricing/ 에서 확인한 그룹 500,000 / 개인 700,000 / 가이딩 400,000 / 3회 1,350,000 / 5회 2,000,000 IDR의 1인 가격입니다. HELLO SEA 확정 요금은 아니며 포함 사항도 확정하지 않았습니다. 영어·한국어·일본어로 참고 요금 안내를 표시합니다.
 
 선택 상품과 인원별 참고 합계를 문의 폼에 표시합니다. 서버에서는 전송된 금액을 신뢰하지 않고 상품 ID로 가격을 다시 계산해 문의 메시지에 저장합니다. 메시지 입력은 1,800자로 제한해 상품 메모와 함께 DB 제한 2,000자를 넘지 않게 합니다. 실제 문의 저장·공개 배포는 기존 서버 연결 작업 이후 가능합니다. 가격 편집용 관리자 화면은 아직 포함하지 않습니다.
+
+
+## September 2026 admin console
+
+Production domain: https://hellosealombok.com. Admin: /admin.
+
+- Approved, email-verified administrators can edit five lesson prices and upload/replace/reorder gallery photos. One gallery photo is selected as the homepage hero.
+- The reservation calendar uses Lombok dates and four sessions per day. Each booking displays the guest name and headcount, with status, optional times and participant names.
+- Inquiries can be assigned to the calendar with name, date, phone, message and headcount prefilled. Inquiries are not automatically confirmed bookings.
+- Revision checks reject stale writes; one inquiry cannot be assigned twice. Cancel bookings using the status field.
+- Apply db/admin-console.sql after the existing schema. Tables have RLS and no public client access. Server routes verify approved user UUIDs before returning personal data.
+- Configure SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, RATE_LIMIT_SECRET and ALLOWED_ORIGINS in Vercel Production. ADMIN_USER_IDS must list verified accounts explicitly approved by the owner. Redeploy after setting environment variables.
+- CONTACT_EMAIL enables an email contact link beside WhatsApp. No address is guessed. These direct-contact links are separate channels; WhatsApp messages are not automatically copied into email or the database. Automatic cross-channel notifications require provider setup and are not enabled by this code.
+- Photo uploads are resized to JPEG, max 12 images, with a total 2.8MB gallery payload. Original image licensing information is preserved until a photo is replaced.
+
+Verification: npm run build; npm test. The admin console still requires a configured server and an approved account for end-to-end login/save verification.
