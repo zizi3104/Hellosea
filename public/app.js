@@ -115,7 +115,7 @@ form.addEventListener('submit',async event=>{
   const response=await fetch('/api/inquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(fields),signal:AbortSignal.timeout(14000)});
   if(!response.ok)throw Object.assign(new Error(),{status:response.status});
   const result=await response.json();if(result.ok!==true)throw new Error();
-  lastInquiryText=inquiryWhatsAppText();replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();
+  lastInquiryText=inquiryWhatsAppText();replyEmail=fields.email.trim();form.hidden=true;const success=document.querySelector('#success');success.hidden=false;renderState();success.focus();openInquiryWhatsApp(lastInquiryText);
  }catch(error){showError(error.status===429?'limited':error.status===400?'checkDetails':'sendError',null);}
  finally{sending=false;renderState();}
 });
@@ -161,5 +161,4 @@ function openInquiryWhatsApp(text){
  // is preserved when handing off to WhatsApp on desktop or mobile.
  window.location.href=links.universal;
 }
-document.querySelector('#form-whatsapp-send').addEventListener('click',()=>{const error=validateFields();if(error){showError(...error);return;}form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));errorKey='waFormOpened';renderState();openInquiryWhatsApp(inquiryWhatsAppText());});
 document.querySelector('#success-whatsapp').addEventListener('click',()=>{if(lastInquiryText)openInquiryWhatsApp(lastInquiryText);});
