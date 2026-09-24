@@ -40,7 +40,9 @@
     {"source":"/pricing.js","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {"source":"/styles.css","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {"source":"/our-story","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+    {"source":"/goods","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {"source":"/ayo-surf","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
+
     {"source":"/photos","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {"source":"/q-and-a","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
     {"source":"/booking-inquiry","headers":[{"key":"Cache-Control","value":"no-store, max-age=0"}]},
@@ -69,6 +71,8 @@
   "rewrites": [
     {"source":"/our-story","destination":"/our-story/index.html"},
     {"source":"/our-story/","destination":"/our-story/index.html"},
+    {"source":"/goods","destination":"/goods/index.html"},
+    {"source":"/goods/","destination":"/goods/index.html"},
     {"source":"/ayo-surf","destination":"/ayo-surf/index.html"},
     {"source":"/ayo-surf/","destination":"/ayo-surf/index.html"},
     {"source":"/photos","destination":"/photos/index.html"},
