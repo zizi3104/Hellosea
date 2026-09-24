@@ -1,6 +1,6 @@
 const currentPage=document.body.dataset.page||'home';
 document.querySelectorAll('[data-page-link]').forEach(link=>{if(link.dataset.pageLink===currentPage)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
-const legacyRoute={story:'/our-story',goods:'/our-story',ayosurf:'/ayo-surf',surf:'/ayo-surf#surf',team:'/ayo-surf#team',pricing:'/ayo-surf#pricing',gallery:'/photos',faq:'/q-and-a',inquire:'/booking-inquiry'}[location.hash.slice(1)];
+const legacyRoute={story:'/our-story',goods:'/goods',ayosurf:'/ayo-surf',surf:'/ayo-surf#surf',team:'/ayo-surf#team',pricing:'/ayo-surf#pricing',gallery:'/photos',faq:'/q-and-a',inquire:'/booking-inquiry'}[location.hash.slice(1)];
 if(currentPage==='home'&&legacyRoute)location.replace(legacyRoute);
 const form = document.querySelector('#inquiry-form');
 const status = document.querySelector('#form-status');
