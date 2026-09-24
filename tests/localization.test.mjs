@@ -12,7 +12,7 @@ test('Every visible translation and dynamic state has all three language version
  const dynamic=[...app.matchAll(/\bt\('([^']+)'\)/g)].map(m=>m[1]);
  for(const key of [...keys,...dynamic])assert.ok(dictionary[key],`Missing key ${key}`);
  for(const [key,entry] of Object.entries(dictionary))for(const lang of ['en','ko','ja'])assert.ok(typeof entry[lang]==='string'&&entry[lang].trim(),`${key}/${lang}`);
- for(const page of ['home','story','surf','photos','faq','booking'])for(const field of ['title','description'])for(const lang of ['en','ko','ja'])assert.ok(pageMetadata[page][field][lang].trim(),`${page}/${field}/${lang}`);
+ for(const page of ['home','story','goods','surf','photos','faq','booking'])for(const field of ['title','description'])for(const lang of ['en','ko','ja'])assert.ok(pageMetadata[page][field][lang].trim(),`${page}/${field}/${lang}`);
  assert.ok(!html.includes('type="date"'));assert.ok(html.includes('novalidate'));assert.equal(dictionary.year.en,'Year');
 });
 function functionSource(name,next) {return app.slice(app.indexOf(`function ${name}(`),app.indexOf(`function ${next}(`));}
