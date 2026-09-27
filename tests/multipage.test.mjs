@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {existsSync,readFileSync} from 'node:fs';
 import {customerPages,renderCustomerPage,pageForPath} from '../scripts/pages.mjs';
 const read=name=>readFileSync(new URL(`../${name}`,import.meta.url),'utf8');
 const template=read('public/index.html');
@@ -11,6 +11,8 @@ const vercel=JSON.parse(read('vercel.json'));
 const dev=read('scripts/dev.mjs');
 const i18n=read('public/i18n.js');
 const sticker=read('public/assets/goods/sticker-pack.svg');
+const gallery=read('public/gallery.js');
+const galleryBuilder=read('scripts/gallery.mjs');
 
 const routes={home:'/',story:'/our-story',goods:'/goods',surf:'/ayo-surf',photos:'/photos',faq:'/q-and-a',booking:'/booking-inquiry'};
 
@@ -36,6 +38,16 @@ test('Build renderer creates seven page-specific documents from one validated te
  for(const panel of ['home','story','goods','surf','photos','faq','booking'])assert.ok(template.includes(`data-page-panel="${panel}"`));
  assert.ok(css.includes('body[data-page="booking"] [data-page-panel]:not([data-page-panel="booking"])'));
  assert.ok(css.includes('a[aria-current="page"]'));
+});
+
+test('Homepage hero uses the supplied autoplaying responsive video',()=>{
+ assert.ok(template.includes('class="hero-photo hero-video"'));
+ assert.ok(template.includes('src="/assets/hello-sea-main.mp4"'));
+ for(const attr of ['autoplay','muted','loop','playsinline'])assert.match(template,new RegExp(`<video[^>]*\\b${attr}\\b`));
+ assert.ok(existsSync(new URL('../public/assets/hello-sea-main.mp4',import.meta.url)));
+ assert.ok(gallery.includes(".hero-photo:not(.hero-video)"));
+ assert.ok(galleryBuilder.includes('/assets/hello-sea-main.mp4'));
+ assert.ok(css.includes('.hero-main-video'));
 });
 
 test('Cross-page calls to action preserve booking choices',()=>{
