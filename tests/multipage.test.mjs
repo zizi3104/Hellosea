@@ -9,6 +9,8 @@ const pricing=read('public/pricing.js');
 const css=read('public/styles.css');
 const vercel=JSON.parse(read('vercel.json'));
 const dev=read('scripts/dev.mjs');
+const i18n=read('public/i18n.js');
+const sticker=read('public/assets/goods/sticker-pack.svg');
 
 const routes={home:'/',story:'/our-story',goods:'/goods',surf:'/ayo-surf',photos:'/photos',faq:'/q-and-a',booking:'/booking-inquiry'};
 
@@ -66,4 +68,14 @@ test('Goods page is an in-person catalog without online commerce',()=>{
  const goods=template.slice(template.indexOf('<section id="goods"'),template.indexOf('<section id="ayosurf"'));
  assert.ok(!/add to cart|checkout|payment|buy now/i.test(goods));
  assert.ok(!goods.includes('<form'));
+ for(const id of ['sticker-pado-a','sticker-pado-b','sticker-wordmark','sticker-logo-lockup'])assert.ok(sticker.includes(`id="${id}"`));
+ assert.ok(!sticker.includes('sticker-mini'));
+});
+
+test('Board-only rental FAQ stays removed until rental inventory is ready',()=>{
+ assert.ok(!template.includes('faqQ10'));
+ assert.ok(!template.includes('faqA10'));
+ assert.ok(!i18n.includes('faqQ10'));
+ assert.ok(!i18n.includes('faqA10'));
+ assert.ok(!/rent a board without a lesson|수업 없이 보드만 대여|レッスンなしでボードだけレンタル/.test(template+i18n));
 });
