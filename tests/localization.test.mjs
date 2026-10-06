@@ -3,16 +3,16 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 const read = name => readFileSync(new URL(`../public/${name}`,import.meta.url),'utf8');
-const i18n=read('i18n.js'),app=read('app.js'),html=read('index.html');
+const i18n=read('i18n.js'),app=read('app.js'),review=read('review.js'),html=read('index.html');
 const i18nPrelude=i18n.slice(0,i18n.indexOf("let language ="));
 const dictionary = vm.runInNewContext(i18nPrelude+'translations');
 const pageMetadata = vm.runInNewContext(i18nPrelude+'pageMeta');
 test('Every visible translation and dynamic state has all three language versions',()=>{
  const keys=[...html.matchAll(/data-i18n(?:-(?:placeholder|aria-label|alt))?="([^"]+)"/g)].map(m=>m[1]);
- const dynamic=[...app.matchAll(/\bt\('([^']+)'\)/g)].map(m=>m[1]);
+ const dynamic=[...`${app}\n${review}`.matchAll(/\b(?:t|text|announce)\('([^']+)'\)/g)].map(m=>m[1]);
  for(const key of [...keys,...dynamic])assert.ok(dictionary[key],`Missing key ${key}`);
  for(const [key,entry] of Object.entries(dictionary))for(const lang of ['en','ko','ja'])assert.ok(typeof entry[lang]==='string'&&entry[lang].trim(),`${key}/${lang}`);
- for(const page of ['home','story','goods','surf','photos','faq','booking'])for(const field of ['title','description'])for(const lang of ['en','ko','ja'])assert.ok(pageMetadata[page][field][lang].trim(),`${page}/${field}/${lang}`);
+ for(const page of ['home','story','goods','surf','photos','faq','review','booking'])for(const field of ['title','description'])for(const lang of ['en','ko','ja'])assert.ok(pageMetadata[page][field][lang].trim(),`${page}/${field}/${lang}`);
  assert.ok(!html.includes('type="date"'));assert.ok(html.includes('novalidate'));assert.equal(dictionary.year.en,'Year');
 });
 function functionSource(name,next) {return app.slice(app.indexOf(`function ${name}(`),app.indexOf(`function ${next}(`));}
