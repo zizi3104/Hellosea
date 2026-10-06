@@ -5,6 +5,7 @@ export const customerPages = [
   {id:'surf',path:'/ayo-surf',output:'ayo-surf/index.html',title:'AYO SURF · Lessons and instructors · HELLO SEA',description:'Explore surf lessons, instructors and prices with AYO SURF in Gerupuk, Lombok.'},
   {id:'photos',path:'/photos',output:'photos/index.html',title:'Photos · HELLO SEA Lombok',description:'Explore photographs of Gerupuk and the shores of Lombok with HELLO SEA.'},
   {id:'faq',path:'/q-and-a',output:'q-and-a/index.html',title:'Q&A · HELLO SEA Lombok',description:'Read answers about surf lessons, weather, equipment, booking and session planning in Lombok.'},
+  {id:'review',path:'/review',output:'review/index.html',title:'Write a surf lesson review · HELLO SEA Lombok',description:'Prepare an honest review, English translation, photos and video after your surf lesson in Gerupuk, Lombok.'},
   {id:'booking',path:'/booking-inquiry',output:'booking-inquiry/index.html',title:'Booking inquiry · HELLO SEA Lombok',description:'Send a surf lesson inquiry to HELLO SEA and continue with the same details on WhatsApp.'}
 ];
 
@@ -14,8 +15,13 @@ export function pageForPath(pathname) {
 }
 
 export function renderCustomerPage(template,page) {
+  const url=`https://hellosealombok.com${page.path==='/'?'/':page.path}`;
   return template
     .replace(/<body data-page="[^"]+">/,`<body data-page="${page.id}">`)
     .replace(/<title>[\s\S]*?<\/title>/,`<title>${page.title}</title>`)
-    .replace(/<meta name="description" content="[^"]*">/,`<meta name="description" content="${page.description}">`);
+    .replace(/<meta name="description" content="[^"]*">/,`<meta name="description" content="${page.description}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/,`<link rel="canonical" href="${url}">`)
+    .replace(/<meta property="og:title" content="[^"]*">/,`<meta property="og:title" content="${page.title}">`)
+    .replace(/<meta property="og:description" content="[^"]*">/,`<meta property="og:description" content="${page.description}">`)
+    .replace(/<meta property="og:url" content="[^"]*">/,`<meta property="og:url" content="${url}">`);
 }
