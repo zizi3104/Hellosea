@@ -5,7 +5,7 @@ export const customerPages = [
   {id:'surf',path:'/ayo-surf',output:'ayo-surf/index.html',title:'AYO SURF · Lessons and instructors · HELLO SEA',description:'Explore surf lessons, instructors and prices with AYO SURF in Gerupuk, Lombok.'},
   {id:'photos',path:'/photos',output:'photos/index.html',title:'Photos · HELLO SEA Lombok',description:'Explore photographs of Gerupuk and the shores of Lombok with HELLO SEA.'},
   {id:'faq',path:'/q-and-a',output:'q-and-a/index.html',title:'Q&A · HELLO SEA Lombok',description:'Read answers about surf lessons, weather, equipment, booking and session planning in Lombok.'},
-  {id:'review',path:'/review',output:'review/index.html',title:'Write a surf lesson review · HELLO SEA Lombok',description:'Prepare an honest review, English translation, photos and video after your surf lesson in Gerupuk, Lombok.'},
+  {id:'review',path:'/review',output:'review/index.html',title:'Write a surf lesson review · HELLO SEA Lombok',description:'Submit a HELLO SEA surf review for approval, browse photo stories, and read text reviews in pages of ten.'},
   {id:'booking',path:'/booking-inquiry',output:'booking-inquiry/index.html',title:'Booking inquiry · HELLO SEA Lombok',description:'Send a surf lesson inquiry to HELLO SEA and continue with the same details on WhatsApp.'}
 ];
 

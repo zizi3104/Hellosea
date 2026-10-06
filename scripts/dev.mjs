@@ -7,6 +7,7 @@ import inquiries from '../api/inquiries.js';
 import config from '../api/config.js';
 import auth from '../api/auth.js';
 import content from '../api/content.js';
+import reviews from '../api/reviews.js';
 import { pageForPath, renderCustomerPage } from './pages.mjs';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.mov':'video/quicktime','.json':'application/json'};
@@ -23,6 +24,7 @@ const server = createServer(async(req,res) => {
     if(pathname==='/api/content') return content(req,res);
     if(pathname==='/api/config') return config(req,res);
     if(pathname==='/api/inquiries') return inquiries(req,res);
+    if(pathname==='/api/reviews') return reviews(req,res);
     return res.status(404).json({error:'Not found.'});
   }
   if(!['GET','HEAD'].includes(req.method)) { res.writeHead(405); return res.end(); }
