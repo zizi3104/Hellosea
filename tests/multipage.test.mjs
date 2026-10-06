@@ -53,9 +53,25 @@ test('Homepage hero uses the supplied autoplaying responsive video',()=>{
  assert.ok(template.includes('src="/assets/hello-sea-main.mp4"'));
  for(const attr of ['autoplay','muted','loop','playsinline'])assert.match(template,new RegExp(`<video[^>]*\\b${attr}\\b`));
  assert.ok(existsSync(new URL('../public/assets/hello-sea-main.mp4',import.meta.url)));
- assert.ok(gallery.includes(".hero-photo:not(.hero-video)"));
+ assert.ok(!gallery.includes(".hero-photo:not(.hero-video)"));
  assert.ok(galleryBuilder.includes('/assets/hello-sea-main.mp4'));
  assert.ok(css.includes('.hero-main-video'));
+});
+
+test('Photos page uses HELLO SEA first-party images and playable video moments',()=>{
+ const media=JSON.parse(read('public/gallery.json'));
+ assert.equal(media.length,6);
+ assert.equal(media.filter(item=>item.kind==='video').length,4);
+ for(const item of media.filter(item=>item.kind==='video')){
+  assert.ok(existsSync(new URL(`../public${item.src}`,import.meta.url)));
+  assert.ok(existsSync(new URL(`../public${item.poster}`,import.meta.url)));
+ }
+ assert.ok(template.includes('id="photo-media"'));
+ assert.ok(template.includes('data-media-kind="video"'));
+ assert.ok(gallery.includes('video.controls=true'));
+ assert.ok(gallery.includes("video.preload='metadata'"));
+ assert.ok(css.includes('.photo-play'));
+ assert.ok(i18n.includes('HELLO SEA LOMBOK이 그루뿍에서 직접 촬영'));
 });
 
 test('Yudha profile uses three clickable photos with a full-size viewer',()=>{

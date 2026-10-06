@@ -9,7 +9,7 @@ import auth from '../api/auth.js';
 import content from '../api/content.js';
 import { pageForPath, renderCustomerPage } from './pages.mjs';
 const root = fileURLToPath(new URL('../public/', import.meta.url));
-const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.json':'application/json'};
+const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.mov':'video/quicktime','.json':'application/json'};
 const server = createServer(async(req,res) => {
   const pathname = new URL(req.url,'http://localhost').pathname;
   res.status = code => { res.statusCode=code; return res; };

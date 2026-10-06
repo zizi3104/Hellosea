@@ -24,7 +24,7 @@ export default async function handler(req,res){
  const r=await db(`surf_inquiries?id=eq.${body.id}`,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify({status:body.status})});if(!r.ok)throw Error();const rows=await r.json();return res.status(rows.length?200:404).json(rows.length?{ok:true}:{error:'문의를 찾지 못했습니다.'});
  }
  if(!Number.isSafeInteger(body.revision)||body.revision<0)return res.status(400).json({error:'최신 내용을 다시 불러오세요.'});
- const value=section==='pricing'?validatePrices(body.content):section==='gallery'?validateGallery(body.content):validateBooking(body.content);if(!value)return res.status(400).json({error:'입력 내용을 확인해주세요. 사진은 최대 12장, 대표 사진은 1장입니다.'});
+ const value=section==='pricing'?validatePrices(body.content):section==='gallery'?validateGallery(body.content):validateBooking(body.content);if(!value)return res.status(400).json({error:'입력 내용을 확인해주세요. 갤러리 항목은 최대 12개, 대표 항목은 1개입니다.'});
  const r=await db(section==='bookings'?'rpc/save_surf_booking':'rpc/save_site_section',{method:'POST',body:JSON.stringify({...(section==='bookings'?{}:{section}),payload:value,expected_revision:body.revision,editor:user.id})});if(!r.ok)throw Error();const result=await r.json();if(['conflict','duplicate'].includes(result.status))return res.status(409).json({error:result.status==='duplicate'?'이미 달력에 등록된 문의입니다. 해당 날짜에서 확인해주세요.':'다른 수정이 먼저 저장됐습니다. 최신 내용을 불러온 뒤 다시 수정해주세요.'});if(result.status!=='saved')throw Error();return res.status(200).json(result);
  }catch{return res.status(503).json({error:'처리 결과를 확인하지 못했습니다. 새로고침 후 다시 확인해주세요.'});}
 }
