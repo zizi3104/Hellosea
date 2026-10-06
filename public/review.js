@@ -1,69 +1,35 @@
 (() => {
- const section=document.querySelector('[data-page-panel="review"]');
- if(!section)return;
- const original=document.getElementById('review-original');
- const english=document.getElementById('review-english');
- const translate=document.getElementById('review-translate');
- const copy=document.getElementById('review-copy');
- const status=document.getElementById('review-status');
- const input=document.getElementById('review-media');
- const previews=document.getElementById('review-media-preview');
- const empty=document.getElementById('review-media-empty');
- const clear=document.getElementById('review-media-clear');
- const maps=document.getElementById('review-google');
- const MAX_FILES=10,MAX_FILE_BYTES=100*1024*1024,MAX_TOTAL_BYTES=300*1024*1024;
- let objectUrls=[];
+ const section=document.querySelector('[data-page-panel="review"]');if(!section)return;
+ const $=id=>document.getElementById(id),form=$('review-form'),original=$('review-original'),english=$('review-english'),name=$('review-name'),input=$('review-media'),previews=$('review-media-preview'),empty=$('review-media-empty'),clear=$('review-media-clear'),status=$('review-status'),submit=$('review-submit'),consent=$('review-consent'),dialog=$('review-photo-dialog');
+ const MAX_FILES=5,MAX_BYTES=10*1024*1024,MAX_PREVIEW=2*1024*1024,PRIVACY='2026-10-review-v1';
+ let selected=[],requestId=null,photoRows=[],textRows=[],textPage=1,textPages=1,currentReview=null,currentPhoto=0,opener=null;
  const text=key=>typeof t==='function'?t(key):key;
- const announce=key=>{status.textContent=text(key);status.focus();};
- function openTranslation(){
-  const value=original.value.trim();
-  if(!value){announce('reviewWriteFirst');original.focus();return;}
-  const url=new URL('https://translate.google.com/');
-  url.searchParams.set('sl','auto');url.searchParams.set('tl','en');url.searchParams.set('text',value);url.searchParams.set('op','translate');
-  window.open(url.toString(),'_blank','noopener,noreferrer');
-  announce('reviewTranslateOpened');
- }
- async function copyEnglish(){
-  const value=english.value.trim();
-  if(!value){announce('reviewEnglishFirst');english.focus();return;}
-  try{await navigator.clipboard.writeText(value);}catch{
-   english.select();document.execCommand('copy');english.setSelectionRange(value.length,value.length);
-  }
-  announce('reviewCopied');
- }
- function clearUrls(){for(const url of objectUrls)URL.revokeObjectURL(url);objectUrls=[];}
- function removeFile(index){
-  const files=[...input.files];files.splice(index,1);
-  const transfer=new DataTransfer();for(const file of files)transfer.items.add(file);input.files=transfer.files;renderMedia();
- }
- function renderMedia(){
-  clearUrls();previews.replaceChildren();
-  const files=[...input.files];empty.hidden=files.length>0;clear.hidden=files.length===0;
-  files.forEach((file,index)=>{
-   const card=document.createElement('article');card.className='review-media-card';
-   const url=URL.createObjectURL(file);objectUrls.push(url);
-   const media=file.type.startsWith('video/')?document.createElement('video'):document.createElement('img');
-   media.src=url;if(media.tagName==='VIDEO'){media.controls=true;media.preload='metadata';media.playsInline=true;}else media.alt=file.name;
-   const details=document.createElement('div');details.className='review-media-meta';
-   const name=document.createElement('span');name.textContent=file.name;
-   const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.setAttribute('aria-label',`${text('reviewRemoveMedia')} ${file.name}`);remove.addEventListener('click',()=>removeFile(index));
-   details.append(name,remove);card.append(media,details);previews.append(card);
-  });
-  if(files.length)status.textContent=text('reviewMediaReady').replace('{count}',String(files.length));
- }
- function validateFiles(){
-  const files=[...input.files];
-  if(files.length>MAX_FILES){input.value='';announce('reviewTooManyFiles');renderMedia();return;}
-  if(files.some(file=>file.size>MAX_FILE_BYTES)||files.reduce((sum,file)=>sum+file.size,0)>MAX_TOTAL_BYTES){input.value='';announce('reviewFilesTooLarge');renderMedia();return;}
-  if(files.some(file=>!/^image\/(jpeg|png|webp)$|^video\/(mp4|quicktime|webm)$/.test(file.type))){input.value='';announce('reviewUnsupportedFile');renderMedia();return;}
-  renderMedia();
- }
- translate.addEventListener('click',openTranslation);
- copy.addEventListener('click',copyEnglish);
- input.addEventListener('change',validateFiles);
- clear.addEventListener('click',()=>{input.value='';renderMedia();announce('reviewMediaCleared');});
- maps.addEventListener('click',()=>{const url=maps.dataset.reviewUrl;if(url)window.open(url,'_blank','noopener,noreferrer');else announce('reviewMapsPendingStatus');});
- document.addEventListener('languagechange',()=>{renderMedia();if(!maps.dataset.reviewUrl)maps.textContent=text('reviewMapsPending');});
- window.addEventListener('beforeunload',clearUrls);
- renderMedia();
+ const el=(tag,value,cls)=>{const node=document.createElement(tag);if(value!==undefined)node.textContent=value;if(cls)node.className=cls;return node;};
+ const announce=(key)=>{status.textContent=text(key);status.focus();};
+ const displayName=row=>row.display_name||text('reviewAnonymous');
+ const reviewBody=row=>language==='en'&&row.body_en?row.body_en:row.body;
+ const reviewDate=row=>new Intl.DateTimeFormat(language,{year:'numeric',month:'short',day:'numeric'}).format(new Date(row.published_at||row.created_at));
+ async function post(value,method='POST'){const response=await fetch('/api/reviews',{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(value),signal:AbortSignal.timeout(30000)});let data={};try{data=await response.json();}catch{}if(!response.ok){const error=Error(data.error||'Review request failed');error.status=response.status;throw error;}return data;}
+ function openTranslation(){const value=original.value.trim();if(!value){announce('reviewWriteFirst');original.focus();return;}const url=new URL('https://translate.google.com/');url.searchParams.set('sl','auto');url.searchParams.set('tl','en');url.searchParams.set('text',value);url.searchParams.set('op','translate');window.open(url.toString(),'_blank','noopener,noreferrer');announce('reviewTranslateOpened');}
+ async function copyEnglish(){const value=english.value.trim();if(!value){announce('reviewEnglishFirst');english.focus();return;}try{await navigator.clipboard.writeText(value);}catch{english.select();document.execCommand('copy');english.setSelectionRange(value.length,value.length);}announce('reviewCopied');}
+ function revoke(item){if(item?.url)URL.revokeObjectURL(item.url);}
+ function clearMedia(){selected.forEach(revoke);selected=[];input.value='';renderMedia();}
+ function removeMedia(index){revoke(selected[index]);selected.splice(index,1);renderMedia();}
+ function canvasBlob(canvas,quality){return new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',quality));}
+ async function prepareImage(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>MAX_BYTES)throw Error('unsupported');const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();const scale=Math.min(1,1600/Math.max(image.naturalWidth,image.naturalHeight)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(image.naturalWidth*scale));canvas.height=Math.max(1,Math.round(image.naturalHeight*scale));canvas.getContext('2d',{alpha:false}).drawImage(image,0,0,canvas.width,canvas.height);let preview;for(const quality of [.84,.72,.6,.48]){preview=await canvasBlob(canvas,quality);if(preview&&preview.size<=MAX_PREVIEW)break;}if(!preview||preview.size>MAX_PREVIEW)throw Error('large');return {file,preview,width:image.naturalWidth,height:image.naturalHeight,url};}catch(error){URL.revokeObjectURL(url);throw error;}}
+ function renderMedia(){previews.replaceChildren();empty.hidden=selected.length>0;clear.hidden=selected.length===0;selected.forEach((item,index)=>{const card=el('article',undefined,'review-media-card'),img=el('img');img.src=item.url;img.alt=item.file.name;const meta=el('div',undefined,'review-media-meta'),label=el('span',index===0?`${text('reviewMainPhoto')} · ${item.file.name}`:item.file.name),remove=el('button','×');remove.type='button';remove.setAttribute('aria-label',`${text('reviewRemoveMedia')} ${item.file.name}`);remove.onclick=()=>removeMedia(index);meta.append(label,remove);card.append(img,meta);previews.append(card);});}
+ async function addFiles(){const files=[...input.files];input.value='';if(selected.length+files.length>MAX_FILES){announce('reviewTooManyFiles');return;}submit.disabled=true;try{for(const file of files)selected.push(await prepareImage(file));renderMedia();if(files.length)status.textContent=text('reviewMediaReady').replace('{count}',String(selected.length));}catch(error){announce(error.message==='large'?'reviewFilesTooLarge':'reviewUnsupportedFile');}finally{submit.disabled=false;}}
+ async function uploadReview(){const body=original.value.trim();if(body.length<10){announce('reviewBodyShort');original.focus();return;}if(!consent.checked){announce('reviewConsentRequired');consent.focus();return;}submit.disabled=true;status.textContent=text('reviewSubmitting');requestId=requestId||crypto.randomUUID();try{const created=await post({action:'create',requestId,displayName:name.value,body,bodyEn:english.value,locale:language,consent:true,privacyVersion:PRIVACY,media:selected.map(item=>({mimeType:item.file.type,size:item.file.size,previewSize:item.preview.size,width:item.width,height:item.height}))});if(!created.submitted){for(const upload of created.uploads){const item=selected[upload.index];for(const [url,blob,type] of [[upload.originalUrl,item.file,item.file.type],[upload.previewUrl,item.preview,'image/jpeg']]){const response=await fetch(url,{method:'PUT',headers:{'Content-Type':type,'x-upsert':'true'},body:blob,signal:AbortSignal.timeout(60000)});if(!response.ok)throw Error('upload');}}await post({action:'finalize',requestId});}form.reset();clearMedia();requestId=null;announce('reviewSubmitted');}catch(error){announce(error.status===429?'reviewRateLimited':error.status===409?'reviewUploadIncomplete':'reviewSubmitError');}finally{submit.disabled=false;}}
+ function photoCard(row){const article=el('article',undefined,'review-photo-card'),button=el('button',undefined,'review-photo-open'),image=el('img'),caption=el('div',undefined,'review-photo-caption');image.src=row.media[0].preview_url;image.alt=text('reviewPhotoAlt').replace('{name}',displayName(row));image.loading='lazy';button.type='button';button.setAttribute('aria-label',`${text('reviewOpenPhoto')}: ${displayName(row)}`);button.append(image,el('span','↗','review-photo-expand'));button.onclick=()=>openPhotoReview(row,0,button);caption.append(el('strong',displayName(row)),el('span',reviewDate(row)));article.append(button,caption);return article;}
+ function renderPhotoRows(){const grid=$('review-photo-grid');grid.replaceChildren(...photoRows.map(photoCard));$('review-photo-empty').hidden=photoRows.length>0;}
+ function textCard(row){const article=el('article',undefined,'review-text-card'),meta=el('div',undefined,'review-text-meta');meta.append(el('strong',displayName(row)),el('time',reviewDate(row)));article.append(meta,el('p',reviewBody(row)));if(language!=='en'&&row.body_en)article.append(el('p',row.body_en,'review-english-copy'));return article;}
+ function renderTextRows(){const list=$('review-text-list');list.replaceChildren(...textRows.map(textCard));$('review-text-empty').hidden=textRows.length>0;const pager=$('review-pagination');pager.hidden=textRows.length===0&&textPages<=1;$('review-page-prev').disabled=textPage<=1;$('review-page-next').disabled=textPage>=textPages;$('review-page-label').textContent=text('reviewPageLabel').replace('{page}',String(textPage)).replace('{pages}',String(textPages));}
+ async function loadPhotos(){try{const response=await fetch('/api/reviews?kind=photo',{cache:'no-store'});if(!response.ok)throw Error();photoRows=(await response.json()).rows||[];}catch{photoRows=[];$('review-photo-empty').textContent=text('reviewLoadUnavailable');}renderPhotoRows();}
+ async function loadText(page=1){textPage=page;try{const response=await fetch(`/api/reviews?kind=text&page=${page}`,{cache:'no-store'});if(!response.ok)throw Error();const data=await response.json();textRows=data.rows||[];textPages=data.pages||1;}catch{textRows=[];textPages=1;$('review-text-empty').textContent=text('reviewLoadUnavailable');}renderTextRows();}
+ function openPhotoReview(row,index,button){currentReview=row;currentPhoto=index;opener=button;renderDialog();dialog.showModal();$('review-photo-close').focus();}
+ function renderDialog(){if(!currentReview)return;const media=currentReview.media[currentPhoto],image=$('review-photo-full');image.src=media.original_url;image.alt=text('reviewPhotoAlt').replace('{name}',displayName(currentReview));$('review-photo-position').textContent=`${currentPhoto+1} / ${currentReview.media.length}`;$('review-photo-prev').disabled=currentReview.media.length<2;$('review-photo-next').disabled=currentReview.media.length<2;$('review-dialog-date').textContent=reviewDate(currentReview);$('review-dialog-name').textContent=displayName(currentReview);$('review-dialog-body').textContent=reviewBody(currentReview);const englishCopy=$('review-dialog-english');englishCopy.textContent=language!=='en'&&currentReview.body_en?currentReview.body_en:'';englishCopy.hidden=!englishCopy.textContent;}
+ function movePhoto(direction){if(!currentReview?.media.length)return;currentPhoto=(currentPhoto+direction+currentReview.media.length)%currentReview.media.length;renderDialog();}
+ form.addEventListener('submit',event=>{event.preventDefault();uploadReview();});$('review-translate').onclick=openTranslation;$('review-copy').onclick=copyEnglish;input.onchange=addFiles;clear.onclick=clearMedia;$('review-page-prev').onclick=()=>loadText(textPage-1);$('review-page-next').onclick=()=>loadText(textPage+1);$('review-photo-prev').onclick=()=>movePhoto(-1);$('review-photo-next').onclick=()=>movePhoto(1);$('review-photo-close').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{if(opener?.isConnected)opener.focus();});dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();movePhoto(event.key==='ArrowLeft'?-1:1);}});dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+ const maps=$('review-google');maps.onclick=()=>{const url=maps.dataset.reviewUrl;if(url)window.open(url,'_blank','noopener,noreferrer');else announce('reviewMapsPendingStatus');};
+ document.addEventListener('languagechange',()=>{renderMedia();renderPhotoRows();renderTextRows();if(dialog.open)renderDialog();if(!maps.dataset.reviewUrl)maps.textContent=text('reviewMapsPending');});window.addEventListener('beforeunload',()=>selected.forEach(revoke));renderMedia();loadPhotos();loadText();
 })();

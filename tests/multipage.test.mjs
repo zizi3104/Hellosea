@@ -90,24 +90,29 @@ test('Yudha profile uses three clickable photos with a full-size viewer',()=>{
  assert.ok(css.includes('.team-triptych'));
 });
 
-test('Review page prepares honest multilingual Google Maps reviews without uploading media',()=>{
+test('Review page submits moderated website reviews and separates photo and text feeds',()=>{
  assert.ok(template.includes('href="/review" data-page-link="review"'));
  assert.ok(template.includes('data-page-panel="review"'));
- assert.ok(template.includes('id="review-original"'));
- assert.ok(template.includes('id="review-english"'));
- assert.ok(template.includes('accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm"'));
+ assert.ok(template.includes('id="review-form"'));
+ assert.ok(template.includes('id="review-photo-grid"'));
+ assert.ok(template.includes('id="review-text-list"'));
+ assert.ok(template.includes('id="review-pagination"'));
+ assert.ok(template.includes('id="review-photo-dialog"'));
+ assert.ok(template.includes('accept="image/jpeg,image/png,image/webp"'));
  assert.ok(template.includes('data-review-url=""'));
  assert.ok(reviewJs.includes("new URL('https://translate.google.com/')"));
- assert.ok(reviewJs.includes('URL.createObjectURL(file)'));
- assert.ok(reviewJs.includes('new DataTransfer()'));
- assert.ok(!reviewJs.includes("fetch("));
- assert.ok(css.includes('.review-media-preview'));
+ assert.ok(reviewJs.includes("fetch('/api/reviews'"));
+ assert.ok(reviewJs.includes("method:'PUT'"));
+ assert.ok(reviewJs.includes("loadText(textPage+1)"));
+ assert.ok(reviewJs.includes("dialog.showModal()"));
+ assert.ok(css.includes('.review-photo-grid'));
+ assert.ok(css.includes('.review-text-list'));
  assert.ok(template.includes('"@type":"SportsActivityLocation"'));
  assert.ok(robots.includes('Sitemap: https://hellosealombok.com/sitemap.xml'));
  assert.ok(sitemap.includes('<loc>https://hellosealombok.com/review</loc>'));
  const security=JSON.stringify(vercel);
- assert.ok(security.includes("img-src 'self' data: blob:"));
- assert.ok(security.includes("media-src 'self' blob:"));
+ assert.ok(security.includes("img-src 'self' data: blob: https://*.supabase.co"));
+ assert.ok(security.includes("connect-src 'self' https://*.supabase.co"));
 });
 
 test('Cross-page calls to action preserve booking choices',()=>{

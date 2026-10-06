@@ -128,3 +128,9 @@ Production domain: https://hellosealombok.com. Admin: /admin.
 - Photo uploads are resized to JPEG, max 12 images, with a total 2.8MB gallery payload. Original image licensing information is preserved until a photo is replaced.
 
 Verification: npm run build; npm test. The admin console still requires a configured server and an approved account for end-to-end login/save verification.
+
+## 웹사이트 리뷰 승인 흐름
+
+`/review`에서 고객이 이름(선택), 리뷰 원문, 영어 번역본(선택), 사진 최대 5장을 제출합니다. 사진 원본은 장당 10MB 이하의 JPG/PNG/WebP만 허용하며, 브라우저가 목록용 JPEG 미리보기를 별도로 생성합니다. 사진은 Supabase의 비공개 `website-reviews` 버킷에 저장되고, 리뷰는 관리자가 `/admin`의 `리뷰 승인` 탭에서 확인해 게시 또는 거절하기 전까지 고객 화면에 노출되지 않습니다.
+
+게시된 사진 리뷰는 첫 사진을 대표 이미지로 표시하고 클릭하면 서명된 원본 사진과 전체 리뷰를 같은 대화상자에서 보여줍니다. 사진 없는 리뷰는 최신순으로 페이지당 10개씩 표시합니다. 공개 브라우저는 Supabase에 직접 읽기 권한이 없으며 `/api/reviews`가 게시 상태만 확인한 뒤 1시간짜리 서명 URL을 제공합니다. 데이터 구조는 `supabase/migrations/202610060001_website_reviews.sql`에 있습니다.
