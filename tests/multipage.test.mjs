@@ -13,6 +13,7 @@ const i18n=read('public/i18n.js');
 const sticker=read('public/assets/goods/sticker-pack.svg');
 const gallery=read('public/gallery.js');
 const galleryBuilder=read('scripts/gallery.mjs');
+const teamJs=read('public/team.js');
 
 const routes={home:'/',story:'/our-story',goods:'/goods',surf:'/ayo-surf',photos:'/photos',faq:'/q-and-a',booking:'/booking-inquiry'};
 
@@ -48,6 +49,22 @@ test('Homepage hero uses the supplied autoplaying responsive video',()=>{
  assert.ok(gallery.includes(".hero-photo:not(.hero-video)"));
  assert.ok(galleryBuilder.includes('/assets/hello-sea-main.mp4'));
  assert.ok(css.includes('.hero-main-video'));
+});
+
+test('Yudha profile uses three clickable photos with a full-size viewer',()=>{
+ for(const id of ['01-9283','02-1905','03-0000']){
+  assert.ok(teamJs.includes(`/assets/team/yudha-${id}-thumb.jpg`));
+  assert.ok(teamJs.includes(`/assets/team/yudha-${id}-full.jpg`));
+  assert.ok(existsSync(new URL(`../public/assets/team/yudha-${id}-thumb.jpg`,import.meta.url)));
+  assert.ok(existsSync(new URL(`../public/assets/team/yudha-${id}-full.jpg`,import.meta.url)));
+ }
+ assert.ok(teamJs.includes("Yudha:["));
+ assert.ok(teamJs.includes("'team-triptych'"));
+ assert.ok(teamJs.includes('dialog.showModal()'));
+ assert.ok(teamJs.includes("event.key==='ArrowLeft'"));
+ assert.ok(teamJs.includes("event.key==='ArrowRight'"));
+ assert.ok(css.includes('.team-photo-dialog'));
+ assert.ok(css.includes('.team-triptych'));
 });
 
 test('Cross-page calls to action preserve booking choices',()=>{
