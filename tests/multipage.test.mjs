@@ -89,6 +89,9 @@ test('Review page prepares honest multilingual Google Maps reviews without uploa
  assert.ok(template.includes('"@type":"SportsActivityLocation"'));
  assert.ok(robots.includes('Sitemap: https://hellosealombok.com/sitemap.xml'));
  assert.ok(sitemap.includes('<loc>https://hellosealombok.com/review</loc>'));
+ const security=JSON.stringify(vercel);
+ assert.ok(security.includes("img-src 'self' data: blob:"));
+ assert.ok(security.includes("media-src 'self' blob:"));
 });
 
 test('Cross-page calls to action preserve booking choices',()=>{
