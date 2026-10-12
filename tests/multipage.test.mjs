@@ -23,6 +23,8 @@ const routes={home:'/',story:'/our-story',goods:'/goods',surf:'/ayo-surf',photos
 test('Header navigation uses separate canonical pages',()=>{
  for(const [id,route] of Object.entries(routes))assert.ok(template.includes(`href="${route}" data-page-link="${id}"`),`${id} does not link to ${route}`);
  assert.equal((template.match(/data-page-link=/g)||[]).length,8);
+ assert.ok(template.includes('data-page-link="goods" data-i18n="navGoods" class="nav-goods" data-feature-state="paused" hidden'));
+ assert.ok(css.includes('.nav-goods[data-feature-state="paused"]{display:none!important}'));
  assert.ok(!template.includes('href="#story"'));
  assert.ok(!template.includes('href="#gallery"'));
  assert.ok(!template.includes('href="#faq"'));
@@ -74,19 +76,22 @@ test('Photos page uses HELLO SEA first-party images and playable video moments',
  assert.ok(i18n.includes('HELLO SEA LOMBOK이 그루뿍에서 직접 촬영'));
 });
 
-test('Yudha profile uses three clickable photos with a full-size viewer',()=>{
- for(const id of ['01-9283','02-1905','03-0000']){
-  assert.ok(teamJs.includes(`/assets/team/yudha-${id}-thumb.jpg`));
-  assert.ok(teamJs.includes(`/assets/team/yudha-${id}-full.jpg`));
-  assert.ok(existsSync(new URL(`../public/assets/team/yudha-${id}-thumb.jpg`,import.meta.url)));
-  assert.ok(existsSync(new URL(`../public/assets/team/yudha-${id}-full.jpg`,import.meta.url)));
+test('Instructor profiles use clickable photos with a full-size viewer',()=>{
+ for(const [name,ids] of [['asim',['01-4861','02-4862']],['yudha',['01-9283','02-1905','03-0000']]])for(const id of ids){
+  assert.ok(teamJs.includes(`/assets/team/${name}-${id}-thumb.jpg`));
+  assert.ok(teamJs.includes(`/assets/team/${name}-${id}-full.jpg`));
+  assert.ok(existsSync(new URL(`../public/assets/team/${name}-${id}-thumb.jpg`,import.meta.url)));
+  assert.ok(existsSync(new URL(`../public/assets/team/${name}-${id}-full.jpg`,import.meta.url)));
  }
+ assert.ok(teamJs.includes("Asim:["));
  assert.ok(teamJs.includes("Yudha:["));
+ assert.ok(teamJs.includes("'team-duo'"));
  assert.ok(teamJs.includes("'team-triptych'"));
  assert.ok(teamJs.includes('dialog.showModal()'));
  assert.ok(teamJs.includes("event.key==='ArrowLeft'"));
  assert.ok(teamJs.includes("event.key==='ArrowRight'"));
  assert.ok(css.includes('.team-photo-dialog'));
+ assert.ok(css.includes('.team-duo'));
  assert.ok(css.includes('.team-triptych'));
 });
 
@@ -136,8 +141,9 @@ test('Legacy single-page hashes and direct route refreshes remain supported',()=
  assert.ok(dev.includes('renderCustomerPage(template,customerPage)'));
 });
 
-test('Goods page is an in-person catalog without online commerce',()=>{
+test('Goods page remains available directly while its navigation tab is paused',()=>{
  assert.ok(template.includes('href="/goods" data-page-link="goods"'));
+ assert.ok(template.includes('class="nav-goods" data-feature-state="paused" hidden'));
  assert.ok(template.includes('data-page-panel="goods"'));
  assert.ok(template.includes('data-i18n="goodsAvailabilityText"'));
  assert.ok(template.includes('/assets/goods/sticker-pack.svg'));
