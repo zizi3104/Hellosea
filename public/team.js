@@ -3,6 +3,10 @@
  let data=JSON.parse(node.textContent);
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined&&text!==null)n.textContent=text;if(cls)n.className=cls;return n;};
  const profilePhotos={
+  Asim:[
+   {thumb:'/assets/team/asim-01-4861-thumb.jpg',full:'/assets/team/asim-01-4861-full.jpg',width:2400,height:1600,position:'50% 54%',alt:{en:'Asim surfing a clean wave below the limestone cliffs in Lombok',ko:'롬복 석회암 절벽 아래의 깨끗한 파도를 타는 Asim',ja:'ロンボクの石灰岩の崖の下でクリーンな波に乗るAsim'}},
+   {thumb:'/assets/team/asim-02-4862-thumb.jpg',full:'/assets/team/asim-02-4862-full.jpg',width:587,height:1046,position:'50% 50%',alt:{en:'Asim riding a small wave across the water near Gerupuk',ko:'그루뿍 바다의 작은 파도를 타는 Asim',ja:'グルプックの海で小さな波に乗るAsim'}}
+  ],
   Yudha:[
    {thumb:'/assets/team/yudha-01-9283-thumb.jpg',full:'/assets/team/yudha-01-9283-full.jpg',width:1608,height:3456,position:'50% 55%',alt:{en:'Yudha longboarding on a clean wave in Lombok',ko:'롬복의 잔잔한 파도 위에서 롱보드를 타는 Yudha',ja:'ロンボクの穏やかな波でロングボードに乗るYudha'}},
    {thumb:'/assets/team/yudha-02-1905-thumb.jpg',full:'/assets/team/yudha-02-1905-full.jpg',width:6000,height:4000,position:'50% 50%',alt:{en:'Yudha surfing through a burst of spray',ko:'물보라를 가르며 서핑하는 Yudha',ja:'水しぶきを上げながらサーフィンするYudha'}},
@@ -38,7 +42,7 @@
  function renderMedia(person,card){
   const photos=profilePhotos[person.name]||[];
   if(photos.length){
-   const frame=el('div',null,photos.length===3?'team-triptych':'team-photo-frame');frame.setAttribute('aria-label',`${person.name} photos`);
+   const frame=el('div',null,photos.length===3?'team-triptych':photos.length===2?'team-duo':'team-photo-frame');frame.setAttribute('aria-label',`${person.name} photos`);
    photos.forEach((photo,index)=>{const button=el('button',null,'team-photo-button');button.type='button';button.setAttribute('aria-label',photoLabel(person.name,index));const img=el('img');img.src=photo.thumb;img.alt=localText(photo.alt);img.loading='lazy';img.decoding='async';img.style.objectPosition=photo.position;button.append(img);button.addEventListener('click',()=>openPhoto(photos,index,button,person.name));frame.append(button);});
    card.append(frame);return;
   }
