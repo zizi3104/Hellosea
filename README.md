@@ -107,6 +107,8 @@ Date selection uses explicit Year / Month / Day dropdowns so browser locale cann
 
 관리자는 AYO SURF 학교 소개, Asim과 Yudha의 이름·사진·각 언어 소개글, 예시 소개 안내 표시를 수정하고 저장·게시할 수 있습니다. 일반 가입자에게는 편집 권한이 없습니다. 게시된 내용은 DB에서 불러오며 기본 예시 내용은 `public/team.json`에 있습니다. 고객용 단일 HTML preview는 생성 시점의 기본 내용이며 운영 DB와 자동 동기화하지 않습니다.
 
+Asim의 4861·4862 사진 2장과 Yudha의 사진 3장은 `public/assets/team/`의 원본 보기·카드용 썸네일 쌍으로 관리하며, `public/team.js`의 `profilePhotos` 설정이 관리자 화면의 단일 사진보다 우선합니다. 굿즈 카탈로그와 `/goods` 경로는 복구를 위해 유지하되, 판매 준비 전까지 고객 헤더의 GOODS 탭은 `data-feature-state="paused"`로 숨깁니다.
+
 ## PRICING 참고 가격
 
 `public/pricing.json`에서 상품과 참고 가격을 관리합니다. 2026-09-21에 https://lomboksurflessons.com/pricing/ 에서 확인한 그룹 500,000 / 개인 700,000 / 가이딩 400,000 / 3회 1,350,000 / 5회 2,000,000 IDR의 1인 가격입니다. HELLO SEA 확정 요금은 아니며 포함 사항도 확정하지 않았습니다. 영어·한국어·일본어로 참고 요금 안내를 표시합니다.
