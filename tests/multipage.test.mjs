@@ -6,6 +6,7 @@ const read=name=>readFileSync(new URL(`../${name}`,import.meta.url),'utf8');
 const template=read('public/index.html');
 const app=read('public/app.js');
 const pricing=read('public/pricing.js');
+const pricingData=JSON.parse(read('public/pricing.json'));
 const css=read('public/styles.css');
 const vercel=JSON.parse(read('vercel.json'));
 const dev=read('scripts/dev.mjs');
@@ -121,6 +122,8 @@ test('Review page submits moderated website reviews and separates photo and text
 });
 
 test('Cross-page calls to action preserve booking choices',()=>{
+ const guiding=pricingData.find(plan=>plan.id==='guiding');
+ assert.deepEqual(guiding.detail,{en:'2 hours · per person',ko:'2시간 · 1인 기준',ja:'2時間・1名あたり'});
  assert.ok(template.includes('href="/booking-inquiry" data-i18n="heroCta"'));
  assert.ok(template.includes('href="/photos" data-i18n="browsePhotos"'));
  assert.ok(template.includes('href="/booking-inquiry" data-i18n="teamCta"'));
